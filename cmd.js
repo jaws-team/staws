@@ -11,7 +11,7 @@ const region = process.env.AWS_REGION || "eu-west-1";
 const DEFAULT_FAILURE_COUNT = 0;
 const DEFAULT_MAX_CONCURRENT = 2;
 
-logger.header(package.name, package.description);
+//logger.header(package.name, package.description);
 
 program.version(package.version).description(package.description);
 program
@@ -37,7 +37,7 @@ program
     "-t, --tags <tags>",
     "Tags of the Stackset. Format: key=value,key2=value2"
   )
-  .action(createStackSet);
+  .action(createOrUpdateStackSet);
 program
   .command("update-stack-set")
   .description("Update an existing Stackset.")
@@ -61,7 +61,7 @@ program
     "-t, --tags <tags>",
     "Tags of the Stackset. Format: key=value,key2=value2"
   )
-  .action(updateStackSet);
+  .action(createOrUpdateStackSet);
 program
   .command("delete-stack-set")
   .description("Delete an existing Stackset.")
@@ -115,7 +115,7 @@ function isRequired(key, name) {
   return key;
 }
 
-async function createStackSet(options) {
+async function createOrUpdateStackSet(options) {
   const stacksetName = isRequired(options.stacksetName, "stackset-name");
   const stacksetFile = isRequired(options.stacksetFile, "stackset-file");
   const account = new Account(this.region);
@@ -125,19 +125,6 @@ async function createStackSet(options) {
     .withAdminRole(options.adminRole)
     .withExecRole(options.execRole);
   const status = await stackSet.create(stacksetFile);
-  console.log(status);
-}
-
-async function updateStackSet(options) {
-  const stacksetName = isRequired(options.stacksetName, "stackset-name");
-  const stacksetFile = isRequired(options.stacksetFile, "stackset-file");
-  const account = new Account(this.region);
-  const accountNumber = await account.getNumber();
-  const stackSet = new StackSet(region, stacksetName, accountNumber)
-    .withTags(options.tags)
-    .withAdminRole(options.adminRole)
-    .withExecRole(options.execRole);
-  const status = await stackSet.update(stacksetFile);
   console.log(status);
 }
 
