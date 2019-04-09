@@ -82,15 +82,15 @@ program
   .alias("lss")
   .action(listStackSets);
 program
-  .command("register-stacks-instances")
+  .command("add-stacks-instances")
   .description(
-    "Register Stack instances. Stacks instances are based on registered accounts to be managed."
+    "Add Stack Instances (accounts)."
   )
-  .alias("rsi")
+  .alias("asi")
   .option("-s, --stackset-name <stackset>", "Stackset name")
   .option(
     "-a, --accounts <failure_count>",
-    "Accounts to be managed by the stackset"
+    "Accounts (Stack Instances) to be managed by the stackset"
   )
   .option(
     "-f, --failure-count [failure_count]",
@@ -102,7 +102,7 @@ program
     "Max concurrent executions",
     DEFAULT_MAX_CONCURRENT
   )
-  .action(registerStackInstances);
+  .action(addStackInstances);
 
 program.parse(process.argv);
 
@@ -124,7 +124,7 @@ async function createOrUpdateStackSet(options) {
     .withTags(options.tags)
     .withAdminRole(options.adminRole)
     .withExecRole(options.execRole);
-  const status = await stackSet.create(stacksetFile);
+  const status = await stackSet.createOrUpdate(stacksetFile);
   console.log(status);
 }
 
@@ -145,7 +145,7 @@ async function listStackSets() {
   });
 }
 
-async function registerStackInstances(options) {
+async function addStackInstances(options) {
   const stackSetName = isRequired(options.stacksetName, "stackset-name");
   const accountsToManage = isRequired(options.accounts, "accounts").split(",");
   const failure_count = options.failure_count;
