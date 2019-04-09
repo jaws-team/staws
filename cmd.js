@@ -15,9 +15,9 @@ const DEFAULT_MAX_CONCURRENT = 2;
 
 program.version(package.version).description(package.description);
 program
-  .command("create-stack-set")
+  .command("create-stackset")
   .description("Create a new Stackset.")
-  .alias("css")
+  .alias("cs")
   .option("-s, --stackset-name <stackset>", "Stackset name")
   .option(
     "-f, --stackset-file <stackset_file>",
@@ -39,9 +39,9 @@ program
   )
   .action(createOrUpdateStackSet);
 program
-  .command("update-stack-set")
+  .command("update-stackset")
   .description("Update an existing Stackset.")
-  .alias("uss")
+  .alias("us")
   .option("-s, --stackset-name <stackset>", "Stackset name")
   .option(
     "-f, --stackset-file <stackset_file>",
@@ -63,9 +63,9 @@ program
   )
   .action(createOrUpdateStackSet);
 program
-  .command("delete-stack-set")
+  .command("delete-stackset")
   .description("Delete an existing Stackset.")
-  .alias("dss")
+  .alias("ds")
   .option("-s, --stackset-name <stackset>", "Stackset name")
   .action(deleteStackSet);
 program
@@ -79,10 +79,10 @@ program
 program
   .command("list-stacksets")
   .description("List stacksets.")
-  .alias("lss")
+  .alias("ls")
   .action(listStackSets);
 program
-  .command("add-stacks-instances")
+  .command("add-stack-instances")
   .description(
     "Add Stack Instances (accounts)."
   )
