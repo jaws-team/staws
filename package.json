@@ -1,6 +1,6 @@
 {
   "name": "staws",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "CLI for AWS Stacks and Stacksets Management",
   "bin": {
     "staws": "./cmd.js"
