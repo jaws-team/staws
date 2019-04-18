@@ -37,6 +37,20 @@ program
     "-t, --tags <tags>",
     "Tags of the Stackset. Format: key=value,key2=value2"
   )
+  .option(
+    "--force",
+    "Force the update"
+  )
+  .option(
+    "--failure-count [failure_count]",
+    "Failure count",
+    DEFAULT_FAILURE_COUNT
+  )
+  .option(
+    "--max-concurrent [max_concurrent]",
+    "Max concurrent executions",
+    DEFAULT_MAX_CONCURRENT
+  )
   .action(createOrUpdateStackSet);
 program
   .command("update-stackset")
@@ -123,7 +137,10 @@ async function createOrUpdateStackSet(options) {
   const stackSet = new StackSet(region, stacksetName, accountNumber)
     .withTags(options.tags)
     .withAdminRole(options.adminRole)
-    .withExecRole(options.execRole);
+    .withExecRole(options.execRole)
+    .withForceMode(options.force)
+    .withFailureToleranceCount(options.failure_count)
+    .withMaxConcurrencyCount(options.max_concurrent);
   const status = await stackSet.createOrUpdate(stacksetFile);
   console.log(status);
 }
