@@ -37,10 +37,7 @@ program
     "-t, --tags <tags>",
     "Tags of the Stackset. Format: key=value,key2=value2"
   )
-  .option(
-    "--force",
-    "Force the update"
-  )
+  .option("--force", "Force the update")
   .option(
     "--failure-count [failure_count]",
     "Failure count",
@@ -97,9 +94,7 @@ program
   .action(listStackSets);
 program
   .command("add-stack-instances")
-  .description(
-    "Add Stack Instances (accounts)."
-  )
+  .description("Add Stack Instances (accounts).")
   .alias("asi")
   .option("-s, --stackset-name <stackset>", "Stackset name")
   .option(
@@ -139,8 +134,8 @@ async function createOrUpdateStackSet(options) {
     .withAdminRole(options.adminRole)
     .withExecRole(options.execRole)
     .withForceMode(options.force)
-    .withFailureToleranceCount(options.failure_count)
-    .withMaxConcurrencyCount(options.max_concurrent);
+    .withFailureToleranceCount(options.failureCount)
+    .withMaxConcurrencyCount(options.maxConcurrent);
   const status = await stackSet.createOrUpdate(stacksetFile);
   console.log(status);
 }
@@ -165,14 +160,11 @@ async function listStackSets() {
 async function addStackInstances(options) {
   const stackSetName = isRequired(options.stacksetName, "stackset-name");
   const accountsToManage = isRequired(options.accounts, "accounts").split(",");
-  const failure_count = options.failure_count;
-  const max_concurrent = options.max_concurrent;
-  const stackSet = new StackSet(region, stackSetName);
-  await stackSet.updateStackInstances(
-    accountsToManage,
-    failure_count,
-    max_concurrent
-  );
+  const stackSet = new StackSet(region, stackSetName)
+    .withFailureToleranceCount(options.failureCount)
+    .withMaxConcurrencyCount(options.maxConcurrent);
+  const status = await stackSet.updateStackInstances(accountsToManage);
+  console.log(status);
 }
 
 async function listManagedAccountsByStackSet(options) {
